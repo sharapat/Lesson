@@ -19,26 +19,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         sharedPreferences = getSharedPreferences(this.packageName, Context.MODE_PRIVATE)
         Log.d("ómirlik cikli", "onCreate")
-        val buttonArray: MutableList<Button> = mutableListOf()
-        val scrollView = HorizontalScrollView(this)
-        val layout = LinearLayout(this)
-        scrollView.addView(layout)
-        layout.layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT)
-        setContentView(scrollView)
-        layout.orientation = LinearLayout.HORIZONTAL
-        for (i in 1 .. 20) {
-            val button = Button(this)
-            buttonArray.add(button)
-            button.setBackgroundResource(R.drawable.logo)
-            button.text = "Button $i"
-            button.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 100.dp)
-            layout.addView(button)
-        }
-        buttonArray[0].onClick { Toast.makeText(this, "Jamshid qalay", Toast.LENGTH_SHORT).show() }
-        buttonArray[1].onClick {
-            Toast.makeText(this, "Poka, kettim", Toast.LENGTH_SHORT).show()
-            layout.removeView(it)
-        }
     }
 
     override fun onStart() {
