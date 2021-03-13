@@ -1,82 +1,81 @@
 package uz.texnopos.lesson
 
-import android.content.Intent
+import android.content.Context
+import android.content.SharedPreferences
+import android.media.MediaPlayer
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import android.widget.Button
-import kotlinx.android.synthetic.main.button.*
-import kotlin.random.Random
+import android.util.Log
+import android.widget.*
 
 class MainActivity : AppCompatActivity() {
 
-    var firstNumber: Int = 0
-    var secondNumber: Int = 0
-    var sign: Int = 0
-    var answers = IntArray(4) {0}
-    var correctAnswerIndex = 0
-    var correctAnswer = 0
-    var score = 0
-    var level = 1
+    lateinit var mediaPlayer: MediaPlayer
+    lateinit var sharedPreferences: SharedPreferences
+    private var position = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.button)
-        nextTask()
-        answer1.setOnClickListener(onAnswerClicked)
-        answer2.setOnClickListener(onAnswerClicked)
-        answer3.setOnClickListener(onAnswerClicked)
-        answer4.setOnClickListener(onAnswerClicked)
+        sharedPreferences = getSharedPreferences(this.packageName, Context.MODE_PRIVATE)
+        Log.d("ómirlik cikli", "onCreate")
+        val buttonArray: MutableList<Button> = mutableListOf()
+        val scrollView = HorizontalScrollView(this)
+        val layout = LinearLayout(this)
+        scrollView.addView(layout)
+        layout.layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT)
+        setContentView(scrollView)
+        layout.orientation = LinearLayout.HORIZONTAL
+        for (i in 1 .. 20) {
+            val button = Button(this)
+            buttonArray.add(button)
+            button.setBackgroundResource(R.drawable.logo)
+            button.text = "Button $i"
+            button.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 100.dp)
+            layout.addView(button)
+        }
+        buttonArray[0].onClick { Toast.makeText(this, "Jamshid qalay", Toast.LENGTH_SHORT).show() }
+        buttonArray[1].onClick {
+            Toast.makeText(this, "Poka, kettim", Toast.LENGTH_SHORT).show()
+            layout.removeView(it)
+        }
     }
 
-    private val onAnswerClicked : (view: View) -> Unit = {
-        if ((it as Button).text == correctAnswer.toString()) {
-            score++
-        }
-        if (level == 3) {
-            val myIntent = Intent(this, GameOverActivity::class.java)
-            myIntent.putExtra("ball", score)
-            startActivity(myIntent)
-            finish()
-        } else {
-            level++
-            nextTask()
-        }
+    override fun onStart() {
+        super.onStart()
+        val uri = Uri.parse("android.resource://" + packageName + "/" + R.raw.audio)
+        mediaPlayer = MediaPlayer.create(this, uri)
+        position = sharedPreferences.getInt("position", 0)
+        mediaPlayer.seekTo(position)
+        mediaPlayer.start()
+        Log.d("ómirlik cikli", "onStart")
     }
 
-    private fun nextTask() {
-        firstNumber = Random.nextInt(100)
-        secondNumber = Random.nextInt(100)
-        sign = Random.nextInt(4)
-        for (i in 0 until 4) {
-            answers[i] = Random.nextInt(100)
-        }
-        correctAnswerIndex = Random.nextInt(4)
-        when(sign) {
-            0 -> {
-                tvSign.text = "+"
-                correctAnswer = firstNumber + secondNumber
-            }
-            1 -> {
-                tvSign.text = "-"
-                correctAnswer = firstNumber - secondNumber
-            }
-            2 -> {
-                tvSign.text = "*"
-                correctAnswer = firstNumber * secondNumber
-            }
-            3 -> {
-                tvSign.text = "/"
-                correctAnswer = firstNumber/secondNumber
-            }
-        }
-        answers[correctAnswerIndex] = correctAnswer
-        tvFirstNumber.text = firstNumber.toString()
-        tvSecondNumber.text = secondNumber.toString()
-        answer1.text = answers[0].toString()
-        answer2.text = answers[1].toString()
-        answer3.text = answers[2].toString()
-        answer4.text = answers[3].toString()
+    override fun onResume() {
+        super.onResume()
+        Log.d("ómirlik cikli", "onResume")
     }
 
+    override fun onRestart() {
+        super.onRestart()
+        Log.d("ómirlik cikli", "onRestart")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        sharedPreferences.edit().putInt("position", mediaPlayer.currentPosition).apply()
+        mediaPlayer.stop()
+        Log.d("ómirlik cikli", "onPause")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("ómirlik cikli", "onStop")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        sharedPreferences.edit().putInt("position", 0).apply()
+        Log.d("ómirlik cikli", "onDestroy")
+    }
 }

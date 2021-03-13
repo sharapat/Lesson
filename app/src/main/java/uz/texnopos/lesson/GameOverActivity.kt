@@ -9,6 +9,5 @@ class GameOverActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game_over)
         val ball = intent.getIntExtra("ball", 0)
-        tvScore.text = ball.toString()
     }
 }
