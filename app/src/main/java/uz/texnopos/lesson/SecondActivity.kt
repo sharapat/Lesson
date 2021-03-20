@@ -1,24 +1,24 @@
 package uz.texnopos.lesson
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import kotlinx.android.synthetic.main.activity_main.*
+import android.widget.Toast
+import kotlinx.android.synthetic.main.activity_second.*
 
-class MainActivity : AppCompatActivity() {
+class SecondActivity : AppCompatActivity() {
 
     private val adapter = MyAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        recyclerView.adapter = adapter
+        setContentView(R.layout.activity_second)
+        rv.adapter = adapter
         adapter.setOnItemClickListener {
-            val intent = Intent(this, SecondActivity::class.java)
-            startActivity(intent)
+            Toast.makeText(this, "This is Toast", Toast.LENGTH_LONG).show()
         }
         setData()
     }
+
     private fun setData() {
         val models = mutableListOf<Model>()
         for(i in 1 .. 100) {
