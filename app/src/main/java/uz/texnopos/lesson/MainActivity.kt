@@ -2,13 +2,10 @@ package uz.texnopos.lesson
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.recyclerview.widget.DividerItemDecoration
 import kotlinx.android.synthetic.main.activity_main.*
-import uz.texnopos.lesson.data.BaseModel
-import uz.texnopos.lesson.data.Check
+import uz.texnopos.lesson.data.InnerModel
 import uz.texnopos.lesson.data.Model
-import uz.texnopos.lesson.data.SecondModel
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,15 +20,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setData() {
-        val models = mutableListOf<BaseModel>()
-        for(i in 1 .. 100) {
-            if (i%5==0) {
-                models.add(SecondModel("", "This is description of this photo $i"))
-            } else {
-                models.add(Model("Title #$i", "Description#$i"))
+        val mData: MutableList<Model> = mutableListOf()
+        for (i in 1 .. 1) {
+            val innerList = mutableListOf<InnerModel>()
+            for (j in 1..100) {
+                innerList.add(InnerModel("Button $j", "This is tile numer $j"))
             }
+            mData.add(Model(innerList))
         }
-        adapter.models = models
+        adapter.models = mData
     }
-
 }
