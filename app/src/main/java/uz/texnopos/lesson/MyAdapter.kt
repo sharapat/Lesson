@@ -1,26 +1,27 @@
 package uz.texnopos.lesson
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import uz.texnopos.lesson.data.Model
-import uz.texnopos.lesson.viewholder.MyViewHolder
 
 class MyAdapter : RecyclerView.Adapter<MyViewHolder>() {
 
-    var models: List<Model> = listOf()
+    var data: List<MyModel> = listOf()
     set(value) {
         field = value
         notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val itemView = parent.inflate(R.layout.item)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item, parent, false)
         return MyViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.populateModel(models[position])
+        holder.populateModel(data[position])
     }
 
-    override fun getItemCount() = models.size
+    override fun getItemCount(): Int {
+        return data.size
+    }
 }

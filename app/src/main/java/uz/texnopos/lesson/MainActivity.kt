@@ -2,32 +2,22 @@ package uz.texnopos.lesson
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.recyclerview.widget.DividerItemDecoration
 import kotlinx.android.synthetic.main.activity_main.*
-import uz.texnopos.lesson.data.InnerModel
-import uz.texnopos.lesson.data.Model
 
 class MainActivity : AppCompatActivity() {
 
-    private val adapter = MyAdapter()
+    private val myAdapter = MyAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        recyclerView.adapter = adapter
-        recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
-        setData()
+        recyclerView.adapter = myAdapter
+        val list: MutableList<MyModel> = mutableListOf()
+        for (i in 1 .. 100) {
+            val student = MyModel("Student number #$i", "LastName $i")
+            list.add(student)
+        }
+        myAdapter.data = list
     }
 
-    private fun setData() {
-        val mData: MutableList<Model> = mutableListOf()
-        for (i in 1 .. 1) {
-            val innerList = mutableListOf<InnerModel>()
-            for (j in 1..100) {
-                innerList.add(InnerModel("Button $j", "This is tile numer $j"))
-            }
-            mData.add(Model(innerList))
-        }
-        adapter.models = mData
-    }
 }
